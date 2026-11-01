@@ -1,0 +1,508 @@
+{
+  "environment": {
+    "date": "2026-11-01",
+    "processor": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
+    "cpu_count": 12,
+    "python": "3.12.11",
+    "chromadb": "1.5.9",
+    "documents": 1500,
+    "relevant_documents": 283,
+    "queries": 300
+  },
+  "retrieval": [
+    {
+      "embedder": "minilm-onnx",
+      "chunk_size": 400,
+      "chunks": 8433,
+      "index_seconds": 313.7,
+      "chunks_per_second": 26.9,
+      "recall_at_1": 0.619,
+      "recall_at_5": 0.8258,
+      "recall_at_10": 0.887,
+      "mrr_at_10": 0.732,
+      "ndcg_at_10": 0.7675,
+      "embed_p50_ms": 14.89,
+      "search_p50_ms": 7.28,
+      "search_p95_ms": 18.99,
+      "query_p50_ms": 24.09,
+      "query_p95_ms": 62.86
+    },
+    {
+      "embedder": "minilm-onnx",
+      "chunk_size": 800,
+      "chunks": 4071,
+      "index_seconds": 189.5,
+      "chunks_per_second": 21.5,
+      "recall_at_1": 0.634,
+      "recall_at_5": 0.8511,
+      "recall_at_10": 0.8863,
+      "mrr_at_10": 0.7474,
+      "ndcg_at_10": 0.7805,
+      "embed_p50_ms": 6.78,
+      "search_p50_ms": 4.64,
+      "search_p95_ms": 5.44,
+      "query_p50_ms": 11.5,
+      "query_p95_ms": 15.29
+    },
+    {
+      "embedder": "minilm-onnx",
+      "chunk_size": 1600,
+      "chunks": 2131,
+      "index_seconds": 142.2,
+      "chunks_per_second": 15.0,
+      "recall_at_1": 0.6073,
+      "recall_at_5": 0.8411,
+      "recall_at_10": 0.873,
+      "mrr_at_10": 0.7324,
+      "ndcg_at_10": 0.7643,
+      "embed_p50_ms": 6.67,
+      "search_p50_ms": 4.36,
+      "search_p95_ms": 5.09,
+      "query_p50_ms": 11.09,
+      "query_p95_ms": 15.27
+    },
+    {
+      "embedder": "hashing-256",
+      "chunk_size": 400,
+      "chunks": 8433,
+      "index_seconds": 5.7,
+      "chunks_per_second": 1475.0,
+      "recall_at_1": 0.2153,
+      "recall_at_5": 0.3294,
+      "recall_at_10": 0.3897,
+      "mrr_at_10": 0.2724,
+      "ndcg_at_10": 0.296,
+      "embed_p50_ms": 0.09,
+      "search_p50_ms": 2.88,
+      "search_p95_ms": 3.81,
+      "query_p50_ms": 2.98,
+      "query_p95_ms": 3.93
+    },
+    {
+      "embedder": "hashing-256",
+      "chunk_size": 800,
+      "chunks": 4071,
+      "index_seconds": 3.5,
+      "chunks_per_second": 1175.4,
+      "recall_at_1": 0.2003,
+      "recall_at_5": 0.3464,
+      "recall_at_10": 0.38,
+      "mrr_at_10": 0.2681,
+      "ndcg_at_10": 0.291,
+      "embed_p50_ms": 0.07,
+      "search_p50_ms": 1.98,
+      "search_p95_ms": 3.14,
+      "query_p50_ms": 2.05,
+      "query_p95_ms": 3.19
+    },
+    {
+      "embedder": "hashing-256",
+      "chunk_size": 1600,
+      "chunks": 2131,
+      "index_seconds": 2.3,
+      "chunks_per_second": 937.2,
+      "recall_at_1": 0.2011,
+      "recall_at_5": 0.3572,
+      "recall_at_10": 0.4089,
+      "mrr_at_10": 0.2737,
+      "ndcg_at_10": 0.2993,
+      "embed_p50_ms": 0.08,
+      "search_p50_ms": 1.98,
+      "search_p95_ms": 2.56,
+      "query_p50_ms": 2.08,
+      "query_p95_ms": 2.68
+    }
+  ],
+  "exact_vs_ann": [
+    {
+      "embedder": "minilm-onnx",
+      "chunk_size": 400,
+      "chunks": 8433,
+      "overlap_at_10": 0.9953,
+      "hnsw_p50_ms": 7.28,
+      "hnsw_p95_ms": 18.99,
+      "exact_p50_ms": 0.93,
+      "exact_p95_ms": 5.02,
+      "ndcg_hnsw": 0.7675,
+      "ndcg_exact": 0.7687
+    },
+    {
+      "embedder": "minilm-onnx",
+      "chunk_size": 800,
+      "chunks": 4071,
+      "overlap_at_10": 0.9967,
+      "hnsw_p50_ms": 4.64,
+      "hnsw_p95_ms": 5.44,
+      "exact_p50_ms": 0.37,
+      "exact_p95_ms": 0.49,
+      "ndcg_hnsw": 0.7805,
+      "ndcg_exact": 0.7805
+    },
+    {
+      "embedder": "minilm-onnx",
+      "chunk_size": 1600,
+      "chunks": 2131,
+      "overlap_at_10": 0.9993,
+      "hnsw_p50_ms": 4.36,
+      "hnsw_p95_ms": 5.09,
+      "exact_p50_ms": 0.34,
+      "exact_p95_ms": 0.41,
+      "ndcg_hnsw": 0.7643,
+      "ndcg_exact": 0.7643
+    },
+    {
+      "embedder": "hashing-256",
+      "chunk_size": 400,
+      "chunks": 8433,
+      "overlap_at_10": 0.922,
+      "hnsw_p50_ms": 2.88,
+      "hnsw_p95_ms": 3.81,
+      "exact_p50_ms": 0.25,
+      "exact_p95_ms": 0.42,
+      "ndcg_hnsw": 0.296,
+      "ndcg_exact": 0.3235
+    },
+    {
+      "embedder": "hashing-256",
+      "chunk_size": 800,
+      "chunks": 4071,
+      "overlap_at_10": 0.922,
+      "hnsw_p50_ms": 1.98,
+      "hnsw_p95_ms": 3.14,
+      "exact_p50_ms": 0.2,
+      "exact_p95_ms": 0.34,
+      "ndcg_hnsw": 0.291,
+      "ndcg_exact": 0.3117
+    },
+    {
+      "embedder": "hashing-256",
+      "chunk_size": 1600,
+      "chunks": 2131,
+      "overlap_at_10": 0.9353,
+      "hnsw_p50_ms": 1.98,
+      "hnsw_p95_ms": 2.56,
+      "exact_p50_ms": 0.14,
+      "exact_p95_ms": 0.24,
+      "ndcg_hnsw": 0.2993,
+      "ndcg_exact": 0.3165
+    }
+  ],
+  "ann_scaling": [
+    {
+      "distribution": "clustered",
+      "vectors": 10000,
+      "build_seconds": 1.9,
+      "recall_at_10": 1.0,
+      "hnsw_p50_ms": 2.26,
+      "hnsw_p95_ms": 3.19,
+      "exact_p50_ms": 0.87,
+      "exact_p95_ms": 1.19
+    },
+    {
+      "distribution": "clustered",
+      "vectors": 50000,
+      "build_seconds": 13.4,
+      "recall_at_10": 1.0,
+      "hnsw_p50_ms": 2.09,
+      "hnsw_p95_ms": 3.02,
+      "exact_p50_ms": 3.17,
+      "exact_p95_ms": 4.32
+    },
+    {
+      "distribution": "clustered",
+      "vectors": 100000,
+      "build_seconds": 31.0,
+      "recall_at_10": 1.0,
+      "hnsw_p50_ms": 3.01,
+      "hnsw_p95_ms": 3.8,
+      "exact_p50_ms": 6.22,
+      "exact_p95_ms": 7.68
+    },
+    {
+      "distribution": "uniform",
+      "vectors": 10000,
+      "build_seconds": 2.3,
+      "recall_at_10": 0.7725,
+      "hnsw_p50_ms": 2.27,
+      "hnsw_p95_ms": 3.46,
+      "exact_p50_ms": 0.83,
+      "exact_p95_ms": 1.35
+    },
+    {
+      "distribution": "uniform",
+      "vectors": 50000,
+      "build_seconds": 20.2,
+      "recall_at_10": 0.423,
+      "hnsw_p50_ms": 3.13,
+      "hnsw_p95_ms": 4.2,
+      "exact_p50_ms": 3.3,
+      "exact_p95_ms": 4.52
+    },
+    {
+      "distribution": "uniform",
+      "vectors": 100000,
+      "build_seconds": 46.4,
+      "recall_at_10": 0.2965,
+      "hnsw_p50_ms": 3.03,
+      "hnsw_p95_ms": 4.72,
+      "exact_p50_ms": 5.5,
+      "exact_p95_ms": 8.07
+    }
+  ],
+  "cache_thresholds": [
+    {
+      "language": "pt",
+      "embedder": "minilm-onnx",
+      "threshold": 0.8,
+      "hit_rate": 0.25,
+      "false_hit_rate": 0.2,
+      "mean_sim_paraphrase": 0.691,
+      "mean_sim_different": 0.722
+    },
+    {
+      "language": "pt",
+      "embedder": "minilm-onnx",
+      "threshold": 0.85,
+      "hit_rate": 0.1,
+      "false_hit_rate": 0.15,
+      "mean_sim_paraphrase": 0.691,
+      "mean_sim_different": 0.722
+    },
+    {
+      "language": "pt",
+      "embedder": "minilm-onnx",
+      "threshold": 0.9,
+      "hit_rate": 0.05,
+      "false_hit_rate": 0.0,
+      "mean_sim_paraphrase": 0.691,
+      "mean_sim_different": 0.722
+    },
+    {
+      "language": "pt",
+      "embedder": "minilm-onnx",
+      "threshold": 0.92,
+      "hit_rate": 0.05,
+      "false_hit_rate": 0.0,
+      "mean_sim_paraphrase": 0.691,
+      "mean_sim_different": 0.722
+    },
+    {
+      "language": "pt",
+      "embedder": "minilm-onnx",
+      "threshold": 0.95,
+      "hit_rate": 0.0,
+      "false_hit_rate": 0.0,
+      "mean_sim_paraphrase": 0.691,
+      "mean_sim_different": 0.722
+    },
+    {
+      "language": "pt",
+      "embedder": "hashing-256",
+      "threshold": 0.8,
+      "hit_rate": 0.0,
+      "false_hit_rate": 0.25,
+      "mean_sim_paraphrase": 0.341,
+      "mean_sim_different": 0.658
+    },
+    {
+      "language": "pt",
+      "embedder": "hashing-256",
+      "threshold": 0.85,
+      "hit_rate": 0.0,
+      "false_hit_rate": 0.0,
+      "mean_sim_paraphrase": 0.341,
+      "mean_sim_different": 0.658
+    },
+    {
+      "language": "pt",
+      "embedder": "hashing-256",
+      "threshold": 0.9,
+      "hit_rate": 0.0,
+      "false_hit_rate": 0.0,
+      "mean_sim_paraphrase": 0.341,
+      "mean_sim_different": 0.658
+    },
+    {
+      "language": "pt",
+      "embedder": "hashing-256",
+      "threshold": 0.92,
+      "hit_rate": 0.0,
+      "false_hit_rate": 0.0,
+      "mean_sim_paraphrase": 0.341,
+      "mean_sim_different": 0.658
+    },
+    {
+      "language": "pt",
+      "embedder": "hashing-256",
+      "threshold": 0.95,
+      "hit_rate": 0.0,
+      "false_hit_rate": 0.0,
+      "mean_sim_paraphrase": 0.341,
+      "mean_sim_different": 0.658
+    },
+    {
+      "language": "en",
+      "embedder": "minilm-onnx",
+      "threshold": 0.8,
+      "hit_rate": 0.25,
+      "false_hit_rate": 0.05,
+      "mean_sim_paraphrase": 0.741,
+      "mean_sim_different": 0.56
+    },
+    {
+      "language": "en",
+      "embedder": "minilm-onnx",
+      "threshold": 0.85,
+      "hit_rate": 0.25,
+      "false_hit_rate": 0.0,
+      "mean_sim_paraphrase": 0.741,
+      "mean_sim_different": 0.56
+    },
+    {
+      "language": "en",
+      "embedder": "minilm-onnx",
+      "threshold": 0.9,
+      "hit_rate": 0.05,
+      "false_hit_rate": 0.0,
+      "mean_sim_paraphrase": 0.741,
+      "mean_sim_different": 0.56
+    },
+    {
+      "language": "en",
+      "embedder": "minilm-onnx",
+      "threshold": 0.92,
+      "hit_rate": 0.05,
+      "false_hit_rate": 0.0,
+      "mean_sim_paraphrase": 0.741,
+      "mean_sim_different": 0.56
+    },
+    {
+      "language": "en",
+      "embedder": "minilm-onnx",
+      "threshold": 0.95,
+      "hit_rate": 0.0,
+      "false_hit_rate": 0.0,
+      "mean_sim_paraphrase": 0.741,
+      "mean_sim_different": 0.56
+    },
+    {
+      "language": "en",
+      "embedder": "hashing-256",
+      "threshold": 0.8,
+      "hit_rate": 0.0,
+      "false_hit_rate": 0.25,
+      "mean_sim_paraphrase": 0.376,
+      "mean_sim_different": 0.718
+    },
+    {
+      "language": "en",
+      "embedder": "hashing-256",
+      "threshold": 0.85,
+      "hit_rate": 0.0,
+      "false_hit_rate": 0.05,
+      "mean_sim_paraphrase": 0.376,
+      "mean_sim_different": 0.718
+    },
+    {
+      "language": "en",
+      "embedder": "hashing-256",
+      "threshold": 0.9,
+      "hit_rate": 0.0,
+      "false_hit_rate": 0.0,
+      "mean_sim_paraphrase": 0.376,
+      "mean_sim_different": 0.718
+    },
+    {
+      "language": "en",
+      "embedder": "hashing-256",
+      "threshold": 0.92,
+      "hit_rate": 0.0,
+      "false_hit_rate": 0.0,
+      "mean_sim_paraphrase": 0.376,
+      "mean_sim_different": 0.718
+    },
+    {
+      "language": "en",
+      "embedder": "hashing-256",
+      "threshold": 0.95,
+      "hit_rate": 0.0,
+      "false_hit_rate": 0.0,
+      "mean_sim_paraphrase": 0.376,
+      "mean_sim_different": 0.718
+    }
+  ],
+  "cache_latency": {
+    "queries": 100,
+    "indexed_documents": 300,
+    "miss_p50_ms": 23.89,
+    "miss_p95_ms": 32.77,
+    "hit_p50_ms": 10.18,
+    "hit_p95_ms": 15.44,
+    "false_hits": [
+      {
+        "question": "ALDH1 expression is associated with poorer prognosis in breast cancer.",
+        "matched": "ALDH1 expression is associated with better breast cancer outcomes.",
+        "similarity": 0.969
+      },
+      {
+        "question": "APOE4 expression in iPSC-derived neurons increases AlphaBeta production and tau phosphorylation, delaying GABA neuron degeneration.",
+        "matched": "APOE4 expression in iPSC-derived neurons increases AlphaBeta production and tau phosphorylation causing GABA neuron degeneration.",
+        "similarity": 0.995
+      },
+      {
+        "question": "Autologous transplantation of mesenchymal stem cells causes fewer opportunistic infections than induction therapy with anti-interleukin-2 receptor antibodies.",
+        "matched": "Autologous transplantation of mesenchymal stem cells causes a higher rate of opportunistic infections than induction therapy with anti-interleukin-2 receptor antibodies.",
+        "similarity": 0.995
+      },
+      {
+        "question": "CX3CR1 on the Th2 cells promotes T cell survival",
+        "matched": "CX3CR1 on the Th2 cells impairs T cell survival",
+        "similarity": 0.984
+      },
+      {
+        "question": "CX3CR1 on the Th2 cells suppresses airway inflammation.",
+        "matched": "CX3CR1 on the Th2 cells promotes airway inflammation.",
+        "similarity": 0.993
+      },
+      {
+        "question": "Chenodeosycholic acid treatment reduces whole-body energy expenditure.",
+        "matched": "Chenodeosycholic acid treatment increases whole-body energy expenditure.",
+        "similarity": 0.988
+      },
+      {
+        "question": "Cold exposure reduces BAT recruitment.",
+        "matched": "Cold exposure increases BAT recruitment.",
+        "similarity": 0.984
+      },
+      {
+        "question": "Febrile seizures reduce the threshold for development of epilepsy.",
+        "matched": "Febrile seizures increase the threshold for development of epilepsy.",
+        "similarity": 0.985
+      }
+    ]
+  },
+  "padding": [
+    {
+      "workload": "index chunks (batch)",
+      "texts": 256,
+      "mean_tokens": 138.5,
+      "fixed_texts_per_s": 18.0,
+      "dynamic_texts_per_s": 24.6,
+      "fixed_p50_ms": "-",
+      "dynamic_p50_ms": "-",
+      "speedup": 1.37,
+      "min_cosine": 1.0
+    },
+    {
+      "workload": "single question",
+      "texts": 100,
+      "mean_tokens": 21.5,
+      "fixed_texts_per_s": 16.9,
+      "dynamic_texts_per_s": 65.8,
+      "fixed_p50_ms": 54.1,
+      "dynamic_p50_ms": 8.0,
+      "speedup": 3.89,
+      "min_cosine": 1.0
+    }
+  ]
+}

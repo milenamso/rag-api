@@ -10,11 +10,12 @@ respondidas pelo LLM com base apenas nos seus documentos, com citação das font
 
 - **Tipagem estrita**: Pydantic v2 com `strict=True` e `extra="forbid"` nos requests, configuração via `pydantic-settings` e `mypy --strict` no CI.
 - **Banco vetorial open-source local**: ChromaDB em modo embarcado (pasta local), servidor HTTP (Docker) ou em memória (testes).
-- **Embeddings locais**: modelo ONNX `all-MiniLM-L6-v2`, sem chamadas externas para indexar.
+- **Embeddings locais**: modelo ONNX `all-MiniLM-L6-v2` com padding dinâmico (perguntas ~6× mais rápidas que o embedder padrão do Chroma, vetores idênticos), sem chamadas externas.
 - **Cache semântico**: perguntas parecidas ("Como instalo?" / "Como faço a instalação?") reaproveitam a resposta anterior por similaridade de cosseno, com TTL, escopo por parâmetros de busca e invalidação automática quando o corpus muda.
 - **Fallback resiliente**: se o LLM falhar (rede, rate limit, recusa, resposta vazia), a API devolve uma resposta extrativa com os trechos mais relevantes e marca `"fallback": true`. Respostas degradadas nunca vão para o cache.
 - **Logging estruturado** (JSON via `structlog`) com `request_id` propagado em todos os eventos e no header `x-request-id`.
-- **Docker + docker-compose**, **pytest** (65 testes, sem rede) e **GitHub Actions** com ruff, mypy, testes e build da imagem.
+- **Benchmarks reproduzíveis** com métricas reais de recuperação, latência e cache ([resultados](benchmarks/results.md)).
+- **Docker + docker-compose**, **pytest** (66 testes, sem rede) e **GitHub Actions** com ruff, mypy, testes e build da imagem.
 
 ## Arquitetura
 
@@ -35,6 +36,7 @@ respondidas pelo LLM com base apenas nos seus documentos, com citação das font
 ```
 
 ```
+benchmarks/           # experimentos reproduzíveis (BEIR/SciFact + cache)
 app/
 ├── main.py            # app factory, middleware de request id, handlers de erro
 ├── config.py          # Settings (pydantic-settings, prefixo RAG_)
@@ -45,7 +47,7 @@ app/
 └── services/
     ├── parsing.py     # PDF (pypdf) e Markdown/TXT
     ├── chunking.py    # divisão em chunks com sobreposição
-    ├── embeddings.py  # ONNX MiniLM (padrão) e HashEmbedder (testes)
+    ├── embeddings.py  # MiniLM ONNX com padding dinâmico e HashEmbedder (testes)
     ├── vector_store.py# wrapper do ChromaDB
     ├── cache.py       # cache semântico
     ├── llm.py         # Claude (SDK oficial) e provedor extrativo
@@ -117,6 +119,38 @@ Resposta:
 
 Filtre por documentos específicos com `"document_ids": ["<id>"]` e ignore o cache com `"use_cache": false`.
 
+## Benchmarks
+
+Métricas reais, medidas com `python -m benchmarks.run_benchmarks` em um notebook
+(Intel 12ª geração, 12 threads, só CPU). Dataset: [BEIR/SciFact](https://github.com/beir-cellar/beir),
+300 perguntas de teste sobre 1.500 resumos científicos (todos os relevantes + distratores com seed fixa).
+Tabelas completas em [`benchmarks/results.md`](benchmarks/results.md).
+
+**Qualidade de recuperação vs. latência** (MiniLM, top-10 documentos):
+
+| Chunk | Chunks | Recall@5 | nDCG@10 | Query p95 | Indexação |
+|---|---|---|---|---|---|
+| 400 caracteres | 8.433 | 0,826 | 0,768 | 62,9 ms | 26,9 chunks/s |
+| **800 caracteres** | 4.071 | **0,851** | **0,781** | **15,3 ms** | 21,5 chunks/s |
+| 1.600 caracteres | 2.131 | 0,841 | 0,764 | 15,3 ms | 15,0 chunks/s |
+| 800 (hashing, sem modelo) | 4.071 | 0,346 | 0,291 | 3,2 ms | 1.175 chunks/s |
+
+**Principais achados**
+
+- **Chunks de 800 caracteres** foram o melhor ponto: chunks menores duplicam o índice e perdem contexto; maiores
+  passam do limite de 256 tokens do MiniLM e são truncados.
+- **Padding dinâmico**: o embedder padrão do Chroma completa todo texto até 256 tokens. Preenchendo só até o
+  maior texto do lote, o embedding de uma pergunta caiu de **54,1 ms para 8,0 ms (p50)** e a indexação
+  ficou 1,37× mais rápida, com vetores idênticos (cosseno mínimo 1,0).
+- **Cache semântico tem falsos positivos perigosos**: no limiar 0,92, 8 de 100 perguntas receberam a resposta
+  de uma pergunta com sentido **oposto** (ex.: *"Cold exposure reduces BAT recruitment"* × *"...increases..."*,
+  similaridade 0,984). Embeddings de frase quase não distinguem negação.
+- **Em português o MiniLM não separa paráfrases de perguntas diferentes** (similaridade média 0,69 × 0,72):
+  o cache praticamente não acerta em PT. Um modelo multilíngue é o próximo passo.
+- **HNSW só compensa em escala**: com 10 mil vetores, busca exata em NumPy é 2,6× mais rápida que o HNSW
+  (0,87 × 2,26 ms); o HNSW passa à frente perto de 50 mil e fica 2× mais rápido com 100 mil (3,0 × 6,2 ms). Em dados sem estrutura (pior caso), o recall do HNSW
+  com parâmetros padrão cai para 0,30.
+
 ## Configuração
 
 Todas as variáveis usam o prefixo `RAG_` (veja [`.env.example`](.env.example) e [`app/config.py`](app/config.py)).
@@ -130,7 +164,7 @@ Todas as variáveis usam o prefixo `RAG_` (veja [`.env.example`](.env.example) e
 | `RAG_ANTHROPIC_SERVER_FALLBACK` | `true` | Em caso de recusa do modelo, a API do Claude tenta outro modelo automaticamente |
 | `RAG_CHROMA_MODE` | `persistent` | `persistent`, `http` ou `memory` |
 | `RAG_EMBEDDING_PROVIDER` | `default` | `default` (ONNX MiniLM) ou `hash` |
-| `RAG_CHUNK_SIZE` / `RAG_CHUNK_OVERLAP` | `1000` / `200` | Tamanho e sobreposição dos chunks (caracteres) |
+| `RAG_CHUNK_SIZE` / `RAG_CHUNK_OVERLAP` | `800` / `120` | Tamanho e sobreposição dos chunks (caracteres; 800 teve o melhor nDCG nos benchmarks) |
 | `RAG_TOP_K` | `4` | Chunks recuperados por pergunta |
 | `RAG_CACHE_SIMILARITY_THRESHOLD` | `0.92` | Similaridade mínima para um hit de cache |
 | `RAG_CACHE_TTL_SECONDS` | `3600` | Validade das entradas do cache |
@@ -150,6 +184,13 @@ ruff check .
 ruff format --check .
 mypy app
 pytest --cov=app
+```
+
+Para reproduzir os benchmarks (baixa o SciFact, ~3 MB, em `data/`):
+
+```bash
+python -m benchmarks.run_benchmarks          # ~20 min em CPU
+python -m benchmarks.run_benchmarks --quick  # ~5 min
 ```
 
 Os testes rodam sem rede: usam ChromaDB em memória, um embedder determinístico e um LLM falso.

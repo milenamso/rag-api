@@ -32,7 +32,7 @@ USER app
 # does not have to download it. Disable with --build-arg PRELOAD_EMBEDDINGS=false.
 ARG PRELOAD_EMBEDDINGS=true
 RUN if [ "$PRELOAD_EMBEDDINGS" = "true" ]; then \
-      python -c "from app.services.embeddings import ChromaDefaultEmbedder; ChromaDefaultEmbedder().embed(['warmup'])"; \
+      python -c "from app.services.embeddings import MiniLMEmbedder; MiniLMEmbedder().embed(['warmup'])"; \
     fi
 
 EXPOSE 8080

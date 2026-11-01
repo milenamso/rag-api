@@ -29,8 +29,8 @@ class Settings(BaseSettings):
 
     # Ingestion
     embedding_provider: Literal["default", "hash"] = "default"
-    chunk_size: int = Field(default=1000, gt=0)
-    chunk_overlap: int = Field(default=200, ge=0)
+    chunk_size: int = Field(default=800, gt=0)  # best nDCG@10 in benchmarks/
+    chunk_overlap: int = Field(default=120, ge=0)
     max_upload_mb: int = Field(default=20, gt=0)
 
     # Retrieval & generation

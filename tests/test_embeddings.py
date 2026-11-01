@@ -1,8 +1,9 @@
 import math
 
+import numpy as np
 import pytest
 
-from app.services.embeddings import HashEmbedder
+from app.services.embeddings import HashEmbedder, mean_pool
 
 
 def cosine(a: list[float], b: list[float]) -> float:
@@ -38,3 +39,10 @@ def test_empty_text_yields_valid_unit_vector():
 def test_invalid_dimensions():
     with pytest.raises(ValueError, match="dimensions"):
         HashEmbedder(dimensions=0)
+
+
+def test_mean_pool_ignores_padding_and_normalizes():
+    hidden = np.array([[[3.0, 4.0], [100.0, 100.0]]], dtype=np.float32)
+    mask = np.array([[1, 0]], dtype=np.int64)
+    [vector] = mean_pool(hidden, mask)
+    assert vector == pytest.approx([0.6, 0.8])
